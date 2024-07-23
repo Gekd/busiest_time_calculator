@@ -23,29 +23,41 @@ class Program
     }
   static List<String> ReadInputFromConsole()
   {
-    Console.WriteLine("How many drivers are taking a break?");
+    Console.WriteLine("\nHow many drivers are taking a break?");
     int drivers = 0;
     bool continueFunction = false;
-    string input = Console.ReadLine();
-
+    string input = Console.ReadLine() ?? "";
     while(!continueFunction)
     {
-      if(int.TryParse(input, out drivers))
+      if(int.TryParse(input, out drivers) && drivers > 0)
       {
         continueFunction = true;
       }
       else 
       {
-        Console.WriteLine("You can only write numbers");
-        Console.WriteLine("How many drivers are taking a break?");
-        input = Console.ReadLine();
+        Console.WriteLine("\nYou can only write positive numbers");
+        Console.WriteLine("\nHow many drivers are taking a break?");
+        input = Console.ReadLine() ?? "";
       }
     }
+
     List<String> times = [];
 
     for (int i = 0; i < drivers; i++) 
     {
-      times.Add(Console.ReadLine());
+      Console.WriteLine("\nEnter break time:");
+      var timeInput = Console.ReadLine() ?? "";
+      try 
+        {
+          List<String> splitTimes = SplitStringEveryNCharacters(timeInput, 5);
+          ConvertTimeToInt(splitTimes[0]);
+          times.Add(timeInput);
+        }
+        catch(Exception)
+        {
+          Console.WriteLine("This time isn't valid!");
+          i--;
+        }
     }
     return times;
   }
@@ -219,6 +231,6 @@ class Program
       timesInt.Add(subList);
     }
     Tuple<string, string, int> output = Algorithm(timesInt);
-    Console.WriteLine("The busiest time is " + output.Item1 + "-" + output.Item2 + " with total of " + output.Item3 + " drivers taking a break");
+    Console.WriteLine("The busiest time is " + output.Item1 + "-" + output.Item2 + " with total of " + output.Item3 + " driver(s) taking a break");
   }
 }

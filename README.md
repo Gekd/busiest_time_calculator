@@ -36,5 +36,5 @@ This project is meant to calculate the busiest time during which workers are tak
     /data/(your .txt file name)
     ```
 
-Time entry format is <start time><end time> (example 11:1512:00)
+Time entry format is <start_time><end_time> (example 11:1512:00)
 

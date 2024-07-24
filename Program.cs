@@ -3,15 +3,15 @@
 class Program
 {
 
-  static List<string> SplitStringEveryNCharacters(string str, int number)
+  static List<string> SplitStringEveryNCharacters(string str, int num)
     {
         List<string> segments = new List<string>();
 
-        for (int i = 0; i < str.Length; i += number)
+        for (int i = 0; i < str.Length; i += num)
         {
-            if (i + number <= str.Length)
+            if (i + num <= str.Length)
             {
-                segments.Add(str.Substring(i, number));
+                segments.Add(str.Substring(i, num));
             }
             else
             {
@@ -23,10 +23,13 @@ class Program
     }
   static List<String> ReadInputFromConsole()
   {
-    Console.WriteLine("\nHow many drivers are taking a break?");
     int drivers = 0;
     bool continueFunction = false;
+
+    Console.WriteLine("\nHow many drivers are taking a break?");
     string input = Console.ReadLine() ?? "";
+
+    // Here we check if user input is positive number
     while(!continueFunction)
     {
       if(int.TryParse(input, out drivers) && drivers > 0)
@@ -43,6 +46,7 @@ class Program
 
     List<String> times = [];
 
+    // Here we check if user inputs valid time in correct format
     for (int i = 0; i < drivers; i++) 
     {
       Console.WriteLine("\nEnter break time:");
@@ -61,71 +65,118 @@ class Program
     }
     return times;
   }
+
+  static bool IsValidPath(string path)
+    {
+        // Check if the path is null or empty
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return false;
+        }
+
+        try
+        {
+            // Check for invalid path characters
+            string root = Path.GetPathRoot(path);
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return false;
+            }
+
+            // Check if the path contains invalid characters
+            if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+            {
+                return false;
+            }
+
+            // Optionally, check if the path exists
+            if (!Directory.Exists(path) && !File.Exists(path))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception)
+        {
+            // If any exception occurs, the path is considered invalid
+            return false;
+        }
+  }
+
   static List<String> ReadInputFromFile()
   {
-    Console.WriteLine("Insert .txt file PATH");
-
-    // How the f do I check if this shit is valid
     string fileName =  "";
     bool isGoodPath = false;
 
+    Console.WriteLine("Insert .txt file PATH");
+
+    // Here we check if user inputs valid PATH
     while (!isGoodPath)
     {
-      try 
+      fileName = Console.ReadLine();
+
+      if (IsValidPath(fileName))
       {
-        fileName = Console.ReadLine();
-        File.OpenRead(fileName);
         isGoodPath = true;
-      } 
-      catch(Exception)
+      }
+      else
       {
         Console.WriteLine("This path is not valid!");
-        Console.WriteLine("Please enter new path");
+        Console.WriteLine("\nPlease enter new path");
       }
     }
+
     List<String> times = [];
 
-    const Int32 BufferSize = 128;
-    using (var fileStream = File.OpenRead(fileName))
-      using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize)) {
-        String line;
-        while ((line = streamReader.ReadLine()) != null)
+
+    try
+    {
+      using (StreamReader reader = new StreamReader(fileName))
+      {
+        string line;
+        while ((line = reader.ReadLine()) != null)
         {
           times.Add(line);
         }
-
+      }
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine("An error occurred:");
+      Console.WriteLine(e.Message);
+    }
     return times;
-  }
-
   }
   static List<String> AskUserInputType()
   {
-    Console.WriteLine("Welcome to Break Calculator");
+    Console.WriteLine("Welcome to Break Calculator\n");
     Console.WriteLine("To continue press:");
     Console.WriteLine("1 - to input break times in Command Line");
     Console.WriteLine("or");
     Console.WriteLine("2 - to input break times from the Text File");
-    int X = 0;
+
+    int inputInteger = 0;
     bool continueFunction = false;
-    string input = Console.ReadLine();
+    string input = Console.ReadLine() ?? "";
     
     while(!continueFunction)
     {
-      int.TryParse(input, out X);
-      if (X == 1 || X == 2)
+      int.TryParse(input, out inputInteger);
+      if (inputInteger == 1 || inputInteger == 2)
       {
         continueFunction = true;
       }
       else 
       {
         Console.WriteLine("You can only choose 1 or 2");
-        input = Console.ReadLine();
+        input = Console.ReadLine() ?? "";
       }
     }
     
     List<String> times = [];
 
-    if (X == 1)
+    if (inputInteger == 1)
     {
       times = ReadInputFromConsole();
     } 
@@ -139,8 +190,8 @@ class Program
   static int ConvertTimeToInt(string time) 
   {
     var items = time.Split(":");
-    int hours = 0;
-    int minutes = 0;
+    int hours;
+    int minutes;
 
     Int32.TryParse(items[0], out hours);
     Int32.TryParse(items[1], out minutes);
@@ -231,6 +282,6 @@ class Program
       timesInt.Add(subList);
     }
     Tuple<string, string, int> output = Algorithm(timesInt);
-    Console.WriteLine("The busiest time is " + output.Item1 + "-" + output.Item2 + " with total of " + output.Item3 + " driver(s) taking a break");
+    Console.WriteLine("\nThe busiest time is " + output.Item1 + "-" + output.Item2 + " with total of " + output.Item3 + " driver(s) taking a break");
   }
 }

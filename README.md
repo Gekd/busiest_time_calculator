@@ -1,6 +1,6 @@
-# busiest_time_calculator
+# Busiest time calculator
 
-This project is meant to calculate the busiest time during which workers are taking breaks.
+Calculator used to determine when most workers take breaks.
 
 ## Steps to use this project:
 
@@ -28,13 +28,13 @@ This project is meant to calculate the busiest time during which workers are tak
 
 4. Run the Docker container with a volume mount:
     ```sh
-    docker run -it -v "(path to your .txt file):/data" busiest_time_calculator
+    docker run -it -v "<path-to-your-txt-file>:/data" busiest_time_calculator
     ```
    
-   In the command line, you need to insert:
+   Insert into command line:
     ```sh
     /data/(your .txt file name)
     ```
 
-Time entry format is <start_time><end_time> (example 11:1512:00)
+Time entry format `<start-time><end-time>` (i.e `11:1512:00`)
 

@@ -108,7 +108,7 @@ class Program {
 		string fileName = "";
 		bool isGoodPath = false;
 
-		Console.WriteLine("Insert .txt file PATH");
+		Console.WriteLine("\nInsert .txt file PATH");
 
 		// Check if user inputs valid PATH
 		while (!isGoodPath) {
